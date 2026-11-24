@@ -76,3 +76,28 @@ def astar(maze):
                 came_from[neighbor] = current
                 heapq.heappush(open_heap, (new_cost + manhattan(neighbor, goal), new_cost, neighbor))
     return None, len(explored)
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Solve a text maze with A* search.")
+    parser.add_argument("maze", help="path to a maze file (# walls, S start, E end)")
+    args = parser.parse_args(argv)
+
+    try:
+        maze = Maze.from_file(args.maze)
+    except (OSError, ValueError) as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
+
+    path, explored = astar(maze)
+    if path is None:
+        print(maze.render())
+        print(f"\nNo path found (explored {explored} cells).")
+        return 2
+    print(maze.render(path))
+    print(f"\nPath length: {len(path) - 1} steps, explored {explored} cells.")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
