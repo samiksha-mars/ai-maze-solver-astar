@@ -10,7 +10,12 @@ WALL, START, END, PATH = "#", "S", "E", "."
 class Maze:
 
     def __init__(self, text):
-        lines = [line.rstrip("\n") for line in text.splitlines() if line.strip()]
+        lines = text.splitlines()
+        # Trim blank lines around the maze, but keep blank rows inside it: they are open cells.
+        while lines and not lines[0].strip():
+            lines.pop(0)
+        while lines and not lines[-1].strip():
+            lines.pop()
         if not lines:
             raise ValueError("maze is empty")
         width = max(len(line) for line in lines)

@@ -13,6 +13,16 @@ class MazeTest(unittest.TestCase):
         self.assertEqual(maze.start, (1, 1))
         self.assertEqual(maze.end, (1, 3))
 
+    def test_blank_rows_inside_maze_are_open(self):
+        maze = Maze("\nS#\n  \n#E\n\n")
+        self.assertEqual(len(maze.grid), 3)
+        path, _ = astar(maze)
+        self.assertEqual(len(path) - 1, 3)
+
+    def test_empty_maze_raises(self):
+        with self.assertRaises(ValueError):
+            Maze("\n   \n")
+
     def test_missing_end_raises(self):
         with self.assertRaises(ValueError):
             Maze("####\n#S #\n####")
