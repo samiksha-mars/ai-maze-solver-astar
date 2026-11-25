@@ -29,11 +29,13 @@ class Maze:
             return cls(f.read())
 
     def _find(self, symbol):
-        for r, row in enumerate(self.grid):
-            for c, cell in enumerate(row):
-                if cell == symbol:
-                    return (r, c)
-        raise ValueError(f"maze has no '{symbol}' cell")
+        cells = [(r, c) for r, row in enumerate(self.grid)
+                 for c, cell in enumerate(row) if cell == symbol]
+        if not cells:
+            raise ValueError(f"maze has no '{symbol}' cell")
+        if len(cells) > 1:
+            raise ValueError(f"maze has {len(cells)} '{symbol}' cells, expected one")
+        return cells[0]
 
     def neighbors(self, cell):
         r, c = cell

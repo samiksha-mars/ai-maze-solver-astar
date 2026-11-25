@@ -27,6 +27,10 @@ class MazeTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             Maze("####\n#S #\n####")
 
+    def test_duplicate_start_raises(self):
+        with self.assertRaises(ValueError):
+            Maze("######\n#S SE#\n######")
+
     def test_neighbors_skip_walls(self):
         maze = Maze("#####\n#S E#\n#####")
         self.assertEqual(list(maze.neighbors((1, 1))), [(1, 2)])
