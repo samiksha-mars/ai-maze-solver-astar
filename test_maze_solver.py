@@ -82,6 +82,19 @@ class CliTest(unittest.TestCase):
             self.assertEqual(main([str(MAZES / "small.txt")]), 0)
             self.assertEqual(main([str(MAZES / "unsolvable.txt")]), 2)
 
+    def test_invalid_maze_file_exits_with_1(self):
+        import tempfile
+        from contextlib import redirect_stderr
+        from io import StringIO
+        with tempfile.TemporaryDirectory() as tmp:
+            no_end = Path(tmp, "no_end.txt")
+            no_end.write_text("#####\n#S  #\n#####\n", encoding="utf-8")
+            stderr = StringIO()
+            with redirect_stderr(stderr):
+                self.assertEqual(main([str(Path(tmp, "missing.txt"))]), 1)
+                self.assertEqual(main([str(no_end)]), 1)
+        self.assertIn("Error:", stderr.getvalue())
+
 
 if __name__ == "__main__":
     unittest.main()
